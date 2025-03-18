@@ -21,8 +21,8 @@ E = 10
 mu = E
 la = E
 max_steps = 2048
-steps = 1800
-gravity = 3.8
+steps = 2048
+gravity = 2
 target = [0.8, 0.2]
 
 scalar = lambda: ti.field(dtype=real)
@@ -46,7 +46,7 @@ x_avg = vec()
 actuation = scalar()
 
 actuation_omega = 20 
-act_strength = 8
+act_strength = 2
 
 def allocate_fields():
     ti.root.dense(ti.ij, (n_actuators, n_sin_waves)).place(weights)
@@ -211,8 +211,8 @@ def compute_actuation(t: ti.i32):
     """
 
     # Frequency and amplitude define our simple sine wave function
-    freq = 6
-    amplitude = 0.2
+    freq = 2
+    amplitude = 2
     for i in range(n_actuators):
 
         phase_shift = i * (math.pi / 2)
@@ -294,47 +294,73 @@ class Scene:
         global n_actuators
         n_actuators = n_act
 
-def fish(scene):
-    scene.add_rect(0.025, 0.025, 0.95, 0.1, -1, ptype=0)
-    scene.add_rect(0.1, 0.2, 0.15, 0.05, -1)
-    scene.add_rect(0.1, 0.15, 0.025, 0.05, 0)
-    scene.add_rect(0.125, 0.15, 0.025, 0.05, 1)
-    scene.add_rect(0.2, 0.15, 0.025, 0.05, 2)
-    scene.add_rect(0.225, 0.15, 0.025, 0.05, 3)
-    scene.set_n_actuators(4)
-
 def robot(scene):
     scene.set_offset(0.1, 0.03)
 
     scene.add_rect(
-        x=0.125, y=0.05,
+        x=0.225, y=0.05,
         w=0.05,  h=0.10,
         actuation=0,
         ptype=1 
     )
 
     scene.add_rect(
-        x=0.075, y=0.10,
+        x=0.175, y=0.10,
         w=0.05,  h=0.10,
         actuation=1,
         ptype=1
     )
 
     scene.add_rect(
-        x=0.175, y=0.10,
+        x=0.275, y=0.10,
         w=0.05, h=0.10,
         actuation=2,
         ptype=1
     )
 
     scene.add_rect(
-        x=0.05, y=0.20,
+        x=0.15, y=0.20,
         w=0.20, h=0.05,
         actuation=3,
         ptype=1
     )
 
     scene.set_n_actuators(4)
+
+
+def robot_1(scene):
+    scene.set_offset(0.1, 0.03)
+
+    scene.add_rect(
+        x=0.125, y=0.05,
+        w=0.05,  h=0.10,
+        actuation=1,
+        ptype=1 
+    )
+
+    scene.add_rect(
+        x=0.215, y=0.05,
+        w=0.05,  h=0.10,
+        actuation=2,
+        ptype=1
+    )
+
+    scene.add_rect(
+        x=0.175, y=0.10,
+        w=0.05, h=0.10,
+        actuation=3,
+        ptype=1
+    )
+
+    scene.add_rect(
+        x=0.175, y=0.20,
+        w=0.15, h=0.05,
+        actuation=0,
+        ptype=1
+    )
+
+    scene.set_n_actuators(4)
+
 
 gui = ti.GUI("Open-Loop MPM Demo", (640, 640), background_color=0xFFFFFF)
 
@@ -364,7 +390,7 @@ def main():
 
     # Build the scene
     scene = Scene()
-    robot(scene)
+    robot_1(scene)
     scene.finalize()
     allocate_fields()
 
